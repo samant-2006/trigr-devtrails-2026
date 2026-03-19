@@ -1,4 +1,5 @@
 # TRIGR — *When the Weather Strikes, Your Payout Already Knows*
+🌐 **[View Live Prototype →](https://samant-2006.github.io/trigr-devtrails-2026)**
 
 > Guidewire DEVTrails 2026 · Chennai · 4-Member Team  
 > Parametric Income Insurance · Behavioral AI Engine · Food Delivery Segment
