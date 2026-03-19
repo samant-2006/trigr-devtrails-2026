@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRIGR — Income Insurance for Delivery Partners</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c10;
+    --surface: #0e1318;
+    --surface2: #141b22;
+    --orange: #f97316;
+    --orange-dim: #c2500f;
+    --amber: #fbbf24;
+    --text: #e8edf2;
+    --text-dim: #7a8a96;
+    --border: rgba(249,115,22,0.15);
+    --glow: rgba(249,115,22,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* RAIN CANVAS */
+  #rain-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.18;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 3rem;
+    background: rgba(8,12,16,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--orange);
+    letter-spacing: -0.02em;
+  }
+
+  .nav-logo span { color: var(--text); }
+
+  .nav-badge {
+    font-size: 0.7rem;
+    font-weight: 500;
+    background: var(--glow);
+    border: 1px solid var(--border);
+    color: var(--orange);
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .nav-cta {
+    background: var(--orange);
+    color: #000;
+    font-weight: 500;
+    font-size: 0.85rem;
+    padding: 0.6rem 1.4rem;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .nav-cta:hover { background: var(--amber); transform: translateY(-1px); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8rem 2rem 4rem;
+  }
+
+  .hero-inner { max-width: 860px; }
+
+  .hero-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--glow);
+    border: 1px solid var(--border);
+    color: var(--orange);
+    font-size: 0.78rem;
+    font-weight: 500;
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    margin-bottom: 2rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero-chip::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--orange);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .hero-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+
+  .hero-title .accent { color: var(--orange); }
+
+  .hero-title .line2 {
+    display: block;
+    color: var(--text-dim);
+    font-size: 0.55em;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-top: 0.3rem;
+  }
+
+  .hero-sub {
+    font-size: 1.15rem;
+    color: var(--text-dim);
+    max-width: 580px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: var(--orange);
+    color: #000;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.85rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover { background: var(--amber); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(249,115,22,0.3); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    font-weight: 400;
+    font-size: 0.95rem;
+    padding: 0.85rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: 1px solid rgba(255,255,255,0.12);
+    cursor: pointer;
+  }
+
+  .btn-outline:hover { border-color: var(--orange); color: var(--orange); }
+
+  /* STATS BAR */
+  .stats-bar {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    animation: fadeUp 0.7s 0.4s ease both;
+  }
+
+  .stat-item {
+    flex: 1;
+    min-width: 160px;
+    padding: 2rem 2.5rem;
+    text-align: center;
+    border-right: 1px solid var(--border);
+  }
+
+  .stat-item:last-child { border-right: none; }
+
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--orange);
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 0.3rem;
+    display: block;
+  }
+
+  /* SECTION COMMON */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 6rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--orange);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+  }
+
+  .section-sub {
+    color: var(--text-dim);
+    font-size: 1rem;
+    line-height: 1.7;
+    max-width: 520px;
+    margin-bottom: 3rem;
+  }
+
+  /* HOW IT WORKS */
+  .how-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .how-card {
+    background: var(--surface);
+    padding: 2rem 1.8rem;
+    transition: background 0.2s;
+  }
+
+  .how-card:hover { background: var(--surface2); }
+
+  .how-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--border);
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+
+  .how-icon {
+    font-size: 1.8rem;
+    margin-bottom: 0.8rem;
+    display: block;
+  }
+
+  .how-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+
+  .how-desc {
+    font-size: 0.87rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  /* TRIGGERS */
+  .triggers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .trigger-row {
+    display: grid;
+    grid-template-columns: 3rem 1fr 1fr 1fr;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.2rem 1.8rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    transition: background 0.2s;
+  }
+
+  .trigger-row:last-child { border-bottom: none; }
+  .trigger-row:hover { background: var(--surface2); }
+
+  .trigger-row.header {
+    background: var(--surface2);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+
+  .trigger-icon { font-size: 1.5rem; text-align: center; }
+  .trigger-name { font-weight: 500; font-size: 0.9rem; }
+  .trigger-threshold { font-size: 0.85rem; color: var(--orange); font-weight: 500; }
+  .trigger-window { font-size: 0.82rem; color: var(--text-dim); }
+
+  /* TIERS */
+  .tiers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 700px) { .tiers-grid { grid-template-columns: 1fr; } }
+
+  .tier-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    background: var(--surface);
+    position: relative;
+    transition: all 0.25s;
+    overflow: hidden;
+  }
+
+  .tier-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--orange);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .tier-card:hover { border-color: var(--orange); transform: translateY(-4px); box-shadow: 0 16px 40px rgba(249,115,22,0.12); }
+  .tier-card:hover::before { opacity: 1; }
+
+  .tier-card.featured {
+    border-color: var(--orange);
+    background: linear-gradient(135deg, var(--surface) 0%, rgba(249,115,22,0.05) 100%);
+  }
+
+  .tier-card.featured::before { opacity: 1; }
+
+  .tier-badge {
+    font-size: 0.68rem;
+    font-weight: 600;
+    background: var(--orange);
+    color: #000;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+
+  .tier-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.3rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .tier-price {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--orange);
+    line-height: 1;
+    margin: 1rem 0 0.3rem;
+  }
+
+  .tier-price span {
+    font-size: 1rem;
+    color: var(--text-dim);
+    font-weight: 300;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .tier-payout {
+    font-size: 0.83rem;
+    color: var(--text-dim);
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tier-payout strong { color: var(--text); }
+
+  .tier-features { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+
+  .tier-features li {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .tier-features li::before { content: '✓'; color: var(--orange); font-weight: 600; }
+
+  /* PERSONAS */
+  .personas-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 700px) { .personas-grid { grid-template-columns: 1fr; } }
+
+  .persona-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.8rem;
+    background: var(--surface);
+    transition: all 0.2s;
+  }
+
+  .persona-card:hover { background: var(--surface2); border-color: rgba(249,115,22,0.3); }
+
+  .persona-avatar {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--orange), var(--amber));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+
+  .persona-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .persona-role {
+    font-size: 0.78rem;
+    color: var(--orange);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .persona-desc {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .persona-loss {
+    background: rgba(249,115,22,0.08);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.8rem;
+    color: var(--orange);
+  }
+
+  /* AI SECTION */
+  .ai-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 700px) { .ai-grid { grid-template-columns: 1fr; } }
+
+  .ai-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.8rem;
+    background: var(--surface);
+  }
+
+  .ai-card-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .ai-card-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--orange);
+  }
+
+  .ai-card-desc {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .ai-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    background: var(--glow);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    margin: 0.2rem;
+  }
+
+  /* FORMULA BLOCK */
+  .formula-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem 2rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    line-height: 2;
+    margin: 2rem 0;
+    overflow-x: auto;
+  }
+
+  .formula-block .hl { color: var(--orange); }
+  .formula-block .hl2 { color: var(--amber); }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 2rem;
+    color: var(--orange);
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-sub {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    margin-bottom: 1.5rem;
+  }
+
+  .footer-hackathon {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background: var(--glow);
+    border: 1px solid var(--border);
+    color: var(--orange);
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+
+  .footer-team {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+  }
+
+  .footer-team strong { color: var(--text); }
+
+  /* DIVIDER */
+  .full-divider {
+    position: relative;
+    z-index: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .trigger-row { grid-template-columns: 2rem 1fr; }
+    .trigger-threshold, .trigger-window { display: none; }
+  }
+
+  @media (max-width: 600px) {
+    .how-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="rain-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">TRIG<span>R</span></div>
+  <div class="nav-badge">Guidewire DEVTrails 2026</div>
+  <a href="#coverage" class="nav-cta">Get Covered</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-chip">AI-Powered Parametric Income Insurance</div>
+    <h1 class="hero-title">
+      When the weather stops you,<br>
+      <span class="accent">your payout already knows.</span>
+      <span class="line2">Behavioral income protection for India's delivery partners</span>
+    </h1>
+    <p class="hero-sub">
+      TRIGR monitors rain, heat, and disruptions in real time. When your zone gets hit,
+      we automatically calculate your personal income loss and send it to your UPI —
+      before you even open the app.
+    </p>
+    <div class="hero-actions">
+      <a href="#coverage" class="btn-primary">View Coverage Plans</a>
+      <a href="#how" class="btn-outline">See How It Works →</a>
+    </div>
+  </div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <span class="stat-num">85K+</span>
+    <span class="stat-label">Delivery Partners in Chennai</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">₹740</span>
+    <span class="stat-label">Avg Daily Loss in Rain</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">5</span>
+    <span class="stat-label">Automated Triggers</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">₹35</span>
+    <span class="stat-label">Starts at / Week</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">0</span>
+    <span class="stat-label">Claims to File. Ever.</span>
+  </div>
+</div>
+
+<div class="full-divider"></div>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="reveal">
+    <span class="section-label">How It Works</span>
+    <h2 class="section-title">No claims. No waiting. No paperwork.</h2>
+    <p class="section-sub">TRIGR runs entirely in the background. The moment a disruption hits your zone, the system takes over.</p>
+  </div>
+  <div class="how-grid reveal">
+    <div class="how-card">
+      <div class="how-num">01</div>
+      <span class="how-icon">📱</span>
+      <div class="how-title">Onboard in 3 Minutes</div>
+      <div class="how-desc">Choose your working hours, operating zones, and coverage tier. No documents. Opens via WhatsApp link.</div>
+    </div>
+    <div class="how-card">
+      <div class="how-num">02</div>
+      <span class="how-icon">🧠</span>
+      <div class="how-title">AI Learns Your Pattern</div>
+      <div class="how-desc">TRIGR builds your Worker DNA — your personal earning fingerprint based on your shifts, zones, and history.</div>
+    </div>
+    <div class="how-card">
+      <div class="how-num">03</div>
+      <span class="how-icon">🌧️</span>
+      <div class="how-title">Disruption Detected</div>
+      <div class="how-desc">Our engine polls weather and alert APIs every 15 minutes. Trigger threshold breached in your pin code? We know.</div>
+    </div>
+    <div class="how-card">
+      <div class="how-num">04</div>
+      <span class="how-icon">🤖</span>
+      <div class="how-title">Personal Loss Calculated</div>
+      <div class="how-desc">Using your Worker DNA, TRIGR calculates exactly what you were projected to earn — and pays that amount, not an average.</div>
+    </div>
+    <div class="how-card">
+      <div class="how-num">05</div>
+      <span class="how-icon">💸</span>
+      <div class="how-title">UPI Payout Instantly</div>
+      <div class="how-desc">Money hits your UPI within minutes of trigger confirmation. No app interaction needed on your end.</div>
+    </div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- TRIGGERS -->
+<section id="triggers">
+  <div class="reveal">
+    <span class="section-label">Automated Triggers</span>
+    <h2 class="section-title">5 events. All automated. All Chennai-specific.</h2>
+    <p class="section-sub">Triggers fire at the pin code level — not the city level. Velachery flooding won't pay a worker in OMR who was working fine.</p>
+  </div>
+  <div class="triggers-list reveal">
+    <div class="trigger-row header">
+      <div></div>
+      <div>Event</div>
+      <div>Threshold</div>
+      <div>Coverage Window</div>
+    </div>
+    <div class="trigger-row">
+      <div class="trigger-icon">🌧️</div>
+      <div class="trigger-name">Heavy Rainfall</div>
+      <div class="trigger-threshold">&gt; 45mm / 3hrs in your pin code</div>
+      <div class="trigger-window">Active shift hours only</div>
+    </div>
+    <div class="trigger-row">
+      <div class="trigger-icon">🌀</div>
+      <div class="trigger-name">Cyclone / Storm Alert</div>
+      <div class="trigger-threshold">Official IMD red/orange alert</div>
+      <div class="trigger-window">Full day coverage</div>
+    </div>
+    <div class="trigger-row">
+      <div class="trigger-icon">🏭</div>
+      <div class="trigger-name">Severe Air Pollution</div>
+      <div class="trigger-threshold">AQI &gt; 350 in city zone</div>
+      <div class="trigger-window">Active shift hours</div>
+    </div>
+    <div class="trigger-row">
+      <div class="trigger-icon">🌡️</div>
+      <div class="trigger-name">Extreme Heat</div>
+      <div class="trigger-threshold">Temperature &gt; 43°C</div>
+      <div class="trigger-window">11 AM – 4 PM only</div>
+    </div>
+    <div class="trigger-row">
+      <div class="trigger-icon">🚧</div>
+      <div class="trigger-name">Curfew / Strike / Bandh</div>
+      <div class="trigger-threshold">Confirmed in operative pin codes</div>
+      <div class="trigger-window">Declared disruption hours</div>
+    </div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- COVERAGE TIERS -->
+<section id="coverage">
+  <div class="reveal">
+    <span class="section-label">Coverage Plans</span>
+    <h2 class="section-title">Weekly pricing. Because you earn weekly.</h2>
+    <p class="section-sub">No annual lock-in. No monthly commitments. Pay every Monday — just like you get paid every week.</p>
+  </div>
+  <div class="tiers-grid reveal">
+    <div class="tier-card">
+      <div class="tier-name">Flex Shield</div>
+      <div class="tier-price">₹35 <span>/ week</span></div>
+      <div class="tier-payout">Up to <strong>₹700 payout</strong> per week</div>
+      <ul class="tier-features">
+        <li>All 5 automated triggers</li>
+        <li>Pin code-level detection</li>
+        <li>Instant UPI payout</li>
+        <li>Best for part-time workers</li>
+      </ul>
+    </div>
+    <div class="tier-card featured">
+      <div class="tier-badge">Most Popular</div>
+      <div class="tier-name">Core Shield</div>
+      <div class="tier-price">₹59 <span>/ week</span></div>
+      <div class="tier-payout">Up to <strong>₹1,400 payout</strong> per week</div>
+      <ul class="tier-features">
+        <li>All 5 automated triggers</li>
+        <li>Behavioral AI personalization</li>
+        <li>Loyalty discount after 8 weeks</li>
+        <li>Best for regular full-shift workers</li>
+      </ul>
+    </div>
+    <div class="tier-card">
+      <div class="tier-name">Full Shield</div>
+      <div class="tier-price">₹89 <span>/ week</span></div>
+      <div class="tier-payout">Up to <strong>₹2,500 payout</strong> per week</div>
+      <ul class="tier-features">
+        <li>All 5 automated triggers</li>
+        <li>Full Worker DNA engine</li>
+        <li>Priority payout processing</li>
+        <li>Best for full-time primary earners</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="formula-block reveal">
+    <span class="hl">Final Weekly Premium</span> = Base Tier Rate<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;× <span class="hl2">Zone Risk Multiplier</span> (0.8 – 1.3)<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;× <span class="hl2">Season Factor</span> (1.0 – 1.4 during monsoon)<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;× <span class="hl2">Behavioral Loyalty Discount</span> (0.85 – 1.0)
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- PERSONAS -->
+<section id="personas">
+  <div class="reveal">
+    <span class="section-label">Who We Protect</span>
+    <h2 class="section-title">Three workers. Three patterns. One platform.</h2>
+    <p class="section-sub">TRIGR doesn't treat every worker the same. Your payout is calculated from your own behavioral fingerprint.</p>
+  </div>
+  <div class="personas-grid reveal">
+    <div class="persona-card">
+      <div class="persona-avatar">🧑</div>
+      <div class="persona-name">Muthu, 28</div>
+      <div class="persona-role">Full-Timer · Adyar Zone</div>
+      <div class="persona-desc">Works evenings and weekends. 5 days a week, 5–6 hours/day. Dinner rush is his peak earning window.</div>
+      <div class="persona-loss">Lost ₹2,100 last October to rain with zero compensation</div>
+    </div>
+    <div class="persona-card">
+      <div class="persona-avatar">👩</div>
+      <div class="persona-name">Priya, 34</div>
+      <div class="persona-role">Primary Earner · Anna Nagar</div>
+      <div class="persona-desc">Works full day shifts. Her family depends entirely on her weekly earnings. A disruption is not inconvenient — it's a crisis.</div>
+      <div class="persona-loss">Needs instant payout — not a claims process that takes days</div>
+    </div>
+    <div class="persona-card">
+      <div class="persona-avatar">🧑‍💻</div>
+      <div class="persona-name">Karthik, 22</div>
+      <div class="persona-role">Part-Timer · OMR Corridor</div>
+      <div class="persona-desc">Works lunch and dinner rush only. His loss window is narrow — 2 disrupted hours at peak matters more than 6 at off-peak.</div>
+      <div class="persona-loss">TRIGR pays based on his peak slot, not a flat daily average</div>
+    </div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- AI SECTION -->
+<section id="ai">
+  <div class="reveal">
+    <span class="section-label">The AI Engine</span>
+    <h2 class="section-title">Four modules. One goal: pay you exactly what you lost.</h2>
+    <p class="section-sub">Every component of TRIGR's AI is built around personalizing your coverage — not averaging it.</p>
+  </div>
+  <div class="ai-grid reveal">
+    <div class="ai-card">
+      <span class="ai-card-icon">🧬</span>
+      <div class="ai-card-title">Behavioral Profiling Engine</div>
+      <div class="ai-card-desc">Builds your Worker DNA from day one. Learns your earning patterns, peak hours, and zone exposure to project exactly what you would have earned during a disruption.</div>
+      <div>
+        <span class="ai-tag">K-Means Clustering</span>
+        <span class="ai-tag">Random Forest</span>
+        <span class="ai-tag">Weekly Retraining</span>
+      </div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-card-icon">💰</span>
+      <div class="ai-card-title">Dynamic Premium Calculator</div>
+      <div class="ai-card-desc">Your weekly premium is personalized — not flat. Zone risk, season, loyalty history, and your behavioral tier all feed into a model that prices your coverage fairly.</div>
+      <div>
+        <span class="ai-tag">XGBoost Regressor</span>
+        <span class="ai-tag">Zone Risk Score</span>
+        <span class="ai-tag">Monsoon Factor</span>
+      </div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-card-icon">🔍</span>
+      <div class="ai-card-title">Fraud Detection Engine</div>
+      <div class="ai-card-desc">Catches GPS spoofing, suspiciously timed policy purchases, and claim patterns that deviate from the worker's own established behavioral baseline.</div>
+      <div>
+        <span class="ai-tag">Isolation Forest</span>
+        <span class="ai-tag">GPS Validation</span>
+        <span class="ai-tag">Anomaly Detection</span>
+      </div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-card-icon">🗺️</span>
+      <div class="ai-card-title">Zone Intelligence Layer</div>
+      <div class="ai-card-desc">10 years of Chennai IMD rainfall data mapped to pin codes. Velachery gets a 1.3x risk multiplier. OMR elevated stretch gets 0.85x. Every zone is different.</div>
+      <div>
+        <span class="ai-tag">Geospatial Analytics</span>
+        <span class="ai-tag">IMD Historical Data</span>
+        <span class="ai-tag">GCC Flood Maps</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">TRIGR</div>
+  <div class="footer-sub">When the Weather Strikes, Your Payout Already Knows.</div>
+  <div class="footer-hackathon">Guidewire DEVTrails 2026 — Unicorn Chase · Phase 1</div>
+  <div class="footer-team">
+    Built in Chennai, for Chennai.<br>
+    <strong>[Your Team Name]</strong> · [Member 1] · [Member 2] · [Member 3] · [Member 4]<br>
+    [Your College Name], Chennai
+  </div>
+</footer>
+
+<script>
+// RAIN ANIMATION
+const canvas = document.getElementById('rain-canvas');
+const ctx = canvas.getContext('2d');
+let drops = [];
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+function initRain() {
+  drops = [];
+  for (let i = 0; i < 120; i++) {
+    drops.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      speed: 4 + Math.random() * 6,
+      length: 12 + Math.random() * 20,
+      opacity: 0.2 + Math.random() * 0.5
+    });
+  }
+}
+
+function drawRain() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drops.forEach(drop => {
+    ctx.beginPath();
+    ctx.moveTo(drop.x, drop.y);
+    ctx.lineTo(drop.x - 1, drop.y + drop.length);
+    ctx.strokeStyle = `rgba(249, 115, 22, ${drop.opacity})`;
+    ctx.lineWidth = 0.8;
+    ctx.stroke();
+    drop.y += drop.speed;
+    drop.x -= 0.5;
+    if (drop.y > canvas.height) {
+      drop.y = -drop.length;
+      drop.x = Math.random() * canvas.width;
+    }
+  });
+  requestAnimationFrame(drawRain);
+}
+
+resize();
+initRain();
+drawRain();
+window.addEventListener('resize', () => { resize(); initRain(); });
+
+// SCROLL REVEAL
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.1 });
+reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
