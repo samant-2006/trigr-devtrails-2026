@@ -301,9 +301,9 @@ We want to be explicit about scope boundaries:
 
 ## Demo Video
 
-> \\\\\\\\\\\\\\\[2-minute video link — YouTube unlisted / Google Drive]
+https://youtu.be/ejB-HXFSGos
 
-\---
+
 
 *Guidewire DEVTrails 2026 — Unicorn Chase
 Built in Chennai. For Chennai. For every delivery partner waiting under a shop awning.*
